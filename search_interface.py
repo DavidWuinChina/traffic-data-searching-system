@@ -21,45 +21,9 @@ column_names = ["VehicleType", "DirectionTime_O", "GantryID_O", "DirectionTime_D
 
 traffic_data = pd.DataFrame(columns=column_names)
 
-
-set(traffic_data.loc[:,"VehicleType"].unique())
-# 筛选某些车名
-busnameset=set()
-busnameset.update([5,31,41])
-filtered1=traffic_data[traffic_data.loc[:,"VehicleType"].isin(busnameset)]
-
-# 所有车站
-set(traffic_data.loc[:,"GantryID_O"].unique())
-# set(traffic_data.loc[:,"GantryID_D"].unique()) 一样的
-# 筛选当前车站和目的地车站名
-start_stationname="01F0005S"
-filtered2=filtered1[filtered1.loc[:,"TripInformation"].str.contains(start_stationname)]
-end_stationname="01H0447S"
-filtered2=filtered2[filtered2.loc[:,"TripInformation"].str.contains(end_stationname)]
-
-# 筛选时间点
-# 提取"information"里当前车站名之前的字符串
-pattern = f"(.{{8}})+"+start_stationname
-extracted_strings = filtered2.loc[:,"TripInformation"].str.extract(pattern, expand=False)
-# 将提取的字符串存储为新列,排序
-sorted_object = filtered2.copy()
-sorted_object["RealTime"] = extracted_strings
-sorted_object["Start"] = start_stationname
-sorted_object["End"] = end_stationname
-sorted_object = sorted_object.sort_values(by=["RealTime","VehicleType"],ascending=True)
-
-# 某个时间点之后的车次
-Timepoint = "08:30"
-time_obj = datetime.strptime(Timepoint, "%H:%M")
-formatted_time = time_obj.strftime("%H:%M:%S")
-filtered3 = sorted_object[sorted_object.loc[:,"RealTime"] > formatted_time]
-
-result = filtered3.loc[:,["VehicleType","DirectionTime_O","GantryID_O","TripLength","DirectionTime_D", "GantryID_D", "TripEnd"]]
-
 ##########################################################################################################
 ################################################  GUI  ###################################################
 ##########################################################################################################
-
 
 # 全新版本
 def link_start_ultra():
@@ -315,7 +279,7 @@ def link_start_ultra():
     end_station_label.place(x=50, y=385)
     # end_station_label.pack()
 
-
+    stationlist = np.sort(traffic_data.loc[:, "GantryID_O"].unique()).tolist()
     end_station_entry = AutocompleteCombobox(completevalues=stationlist, font=('思源黑体 CN', 15, 'bold'), width=15,state="readonly")
     # end_station_entry.insert(0, "目的地:")
 
