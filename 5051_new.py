@@ -344,10 +344,10 @@ def link_start_ultra():
     sort_button = tk.Button(root, text="Click to Sort", command=sort_button_click, font=('Arial', 15, 'bold'))
     sort_button.place(x=50, y=675)
 
-    #装饰图片
-    image = tk.PhotoImage(file='C:/Users/David Wu/Desktop/pc_new.png')
-    label = tk.Label(root, image=image)
-    label.place(x=1050,y=30)
+    # #装饰图片
+    # image = tk.PhotoImage(file='C:/Users/David Wu/Desktop/pc_new.png')
+    # label = tk.Label(root, image=image)
+    # label.place(x=1050,y=30)
     # 启动主循环
     root.mainloop()
 
